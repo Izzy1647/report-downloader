@@ -4,10 +4,9 @@ let selectedEntities = new Set();
 let isDownloading = false;
 let currentDownloadId = null;
 let currentUserId = null;
-let apiKeyStored = false;
 
 // --- DOM Elements ---
-let apiKeyInput, toggleApiKeyBtn, apiKeyStatus, apiKeyStatusIndicator, apiKeyStatusText, startMonthInput, endMonthInput, monthSelectionSummary;
+let apiKeyInput, toggleApiKeyBtn, clearApiKeyBtn, startMonthInput, endMonthInput, monthSelectionSummary;
 let outputDirInput, importStructureBtn, clearStructureBtn, addEntityBtn, selectAllBtn, deselectAllBtn;
 let saveStructureBtn, accountContainer, entityCountEl, startDownloadBtn, cancelDownloadBtn;
 let progressSection, progressText, progressBar, resultSummary, resultDetails, logContainer, fileInput;
@@ -33,22 +32,6 @@ function initializeUserId() {
   currentUserId = userId;
 }
 
-function updateApiKeyStatus(stored, message = '') {
-  if (!apiKeyStatus || !apiKeyStatusIndicator || !apiKeyStatusText) {
-    return;
-  }
-
-  if (stored) {
-    apiKeyStatus.className = 'api-key-status stored';
-    apiKeyStatusText.textContent = message || 'API key stored securely';
-  } else {
-    apiKeyStatus.className = 'api-key-status error';
-    apiKeyStatusText.textContent = message || 'API key not stored';
-  }
-  
-  apiKeyStatus.style.display = 'flex';
-}
-
 // Client-side encryption for API key
 async function encryptApiKey(apiKey) {
   // Simple XOR encryption for demo (in production, use proper crypto)
@@ -64,93 +47,28 @@ async function encryptApiKey(apiKey) {
   return btoa(encrypted); // Base64 encode for transmission
 }
 
-async function storeApiKey(apiKey) {
-  if (!currentUserId) {
-    showNotification('User session not initialized', 'error');
-    return false;
-  }
-
-  try {
-    // Encrypt API key before transmission
-    const encryptedApiKey = await encryptApiKey(apiKey.trim());
-    
-    const response = await fetch('/api/store-api-key', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        userId: currentUserId,
-        encryptedApiKey: encryptedApiKey
-      })
-    });
-
-    const result = await response.json();
-    
-    if (result.success) {
-      apiKeyStored = true;
-      // Clear the API key input for security
-      if (apiKeyInput) {
-        apiKeyInput.value = '';
-        apiKeyInput.placeholder = 'API key stored securely';
-      }
-      updateApiKeyStatus(true, 'API key stored securely');
-      showNotification('API key stored securely', 'success');
-      return true;
-    } else {
-      updateApiKeyStatus(false, result.error || 'Failed to store API key');
-      showNotification(result.error || 'Failed to store API key', 'error');
-      return false;
-    }
-  } catch (error) {
-    console.error('Error storing API key:', error);
-    updateApiKeyStatus(false, 'Failed to store API key');
-    showNotification('Failed to store API key', 'error');
-    return false;
-  }
+// Session-based API key management
+function saveApiKeyToSession(apiKey) {
+  sessionStorage.setItem('adyen_api_key', apiKey);
 }
 
-async function deleteStoredApiKey() {
-  if (!currentUserId) {
-    return false;
-  }
+function getApiKeyFromSession() {
+  return sessionStorage.getItem('adyen_api_key');
+}
 
-  try {
-    const response = await fetch(`/api/delete-api-key/${currentUserId}`, {
-      method: 'DELETE'
-    });
+function clearApiKeyFromSession() {
+  sessionStorage.removeItem('adyen_api_key');
+}
 
-    const result = await response.json();
-    
-    if (result.success) {
-      apiKeyStored = false;
-      if (apiKeyInput) {
-        apiKeyInput.value = '';
-        apiKeyInput.placeholder = 'Enter your Adyen API key';
-      }
-      updateApiKeyStatus(false, 'API key deleted');
-      showNotification('API key deleted', 'success');
-      return true;
-    } else {
-      updateApiKeyStatus(false, result.error || 'Failed to delete API key');
-      showNotification(result.error || 'Failed to delete API key', 'error');
-      return false;
-    }
-  } catch (error) {
-    console.error('Error deleting API key:', error);
-    updateApiKeyStatus(false, 'Failed to delete API key');
-    showNotification('Failed to delete API key', 'error');
-    return false;
-  }
+function hasApiKeyInSession() {
+  return sessionStorage.getItem('adyen_api_key') !== null;
 }
 
 // Initialize DOM elements
 function initializeDOMElements() {
     apiKeyInput = document.getElementById("apiKey");
     toggleApiKeyBtn = document.getElementById("toggleApiKey");
-    apiKeyStatus = document.getElementById("apiKeyStatus");
-    apiKeyStatusIndicator = document.querySelector(".status-indicator");
-    apiKeyStatusText = document.querySelector(".status-text");
+    clearApiKeyBtn = document.getElementById("clearApiKeyBtn");
     startMonthInput = document.getElementById("startMonth");
     endMonthInput = document.getElementById("endMonth");
     monthSelectionSummary = document.getElementById("monthSelectionSummary");
@@ -202,6 +120,19 @@ function setupEventListeners() {
     if (toggleApiKeyBtn) {
         toggleApiKeyBtn.addEventListener("click", () => {
             apiKeyInput.type = apiKeyInput.type === "password" ? "text" : "password";
+        });
+    }
+
+    // Clear API Key (sessionStorage)
+    if (clearApiKeyBtn) {
+        clearApiKeyBtn.addEventListener("click", () => {
+            clearApiKeyFromSession();
+            if (apiKeyInput) {
+                apiKeyInput.value = '';
+                apiKeyInput.placeholder = 'Enter your Adyen API key';
+            }
+            clearApiKeyBtn.style.display = 'none';
+            showNotification("API key cleared from session", "success");
         });
     }
 
@@ -555,30 +486,33 @@ async function startDownload() {
 
   console.log("Validation check:", {
     apiKey: apiKey ? "present" : "missing",
-    apiKeyStored: apiKeyStored,
+    apiKeyInSession: hasApiKeyInSession(),
     targetMonthsLength: targetMonths.length,
     reportTypesLength: reportTypes.length,
     selectedEntitiesSize: selectedEntities.size
   });
 
-  // Check if API key is provided or already stored
-  if (!apiKey && !apiKeyStored) {
-    console.log("API key validation failed - no key provided or stored");
+  // Get API key from input or sessionStorage
+  let finalApiKey = null;
+  
+  if (apiKey) {
+    // User provided new API key in input
+    finalApiKey = apiKey;
+    saveApiKeyToSession(apiKey);
+    // Clear the input field after saving to session
+    apiKeyInput.value = '';
+    if (clearApiKeyBtn) clearApiKeyBtn.style.display = 'inline-flex';
+    console.log("API key saved to session");
+  } else if (hasApiKeyInSession()) {
+    // Use API key from sessionStorage
+    finalApiKey = getApiKeyFromSession();
+    console.log("API key retrieved from session");
+  } else {
+    // No API key available
+    console.log("API key validation failed - no key provided or in session");
     showNotification("Please enter your API key", "error");
     apiKeyInput.focus();
     return;
-  }
-
-  // If API key is provided, always store it (to override any existing key)
-  if (apiKey) {
-    console.log("Storing new API key (overriding existing if present)...");
-    const stored = await storeApiKey(apiKey);
-    if (!stored) {
-      return; // Storage failed, error already shown
-    }
-    // Clear the input field after successful storage
-    apiKeyInput.value = '';
-    console.log("API key input cleared after storage");
   }
 
   if (targetMonths.length === 0) {
@@ -621,12 +555,16 @@ async function startDownload() {
   logContainer.innerHTML = "";
 
   try {
+    // Encrypt API key before transmission
+    const encryptedApiKey = await encryptApiKey(finalApiKey);
+    
     const response = await fetch("/api/download", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
+        encryptedApiKey,
         userId: currentUserId,
         targetMonths,
         selectedEntities: Array.from(selectedEntities),

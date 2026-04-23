@@ -5,7 +5,6 @@ const cors = require('cors');
 const multer = require('multer');
 const rateLimit = require('express-rate-limit');
 const { runDownload } = require('./downloadEngine');
-const ApiKeyManager = require('./apiKeyManager');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -43,14 +42,6 @@ const upload = multer({
 
 // Store active downloads
 const activeDownloads = new Map();
-
-// Initialize API key manager
-const apiKeyManager = new ApiKeyManager();
-
-// Clean up expired API keys every hour
-setInterval(() => {
-  apiKeyManager.cleanup();
-}, 60 * 60 * 1000);
 
 // Routes
 app.get('/', (req, res) => {
@@ -103,59 +94,7 @@ function decryptApiKey(encryptedApiKey, userId) {
   }
 }
 
-// Secure API key storage endpoint
-app.post('/api/store-api-key', strictLimiter, (req, res) => {
-  try {
-    const { encryptedApiKey, userId } = req.body;
-    
-    if (!encryptedApiKey || !userId) {
-      return res.status(400).json({ error: 'Encrypted API key and user ID are required' });
-    }
-    
-    // Decrypt the API key
-    let apiKey;
-    try {
-      apiKey = decryptApiKey(encryptedApiKey, userId);
-    } catch (error) {
-      return res.status(400).json({ error: 'Failed to decrypt API key' });
-    }
-    
-    // Validate API key format
-    if (!apiKeyManager.validateApiKey(apiKey)) {
-      return res.status(400).json({ error: 'Invalid API key format' });
-    }
-    
-    // Store the encrypted API key
-    apiKeyManager.storeApiKey(userId, apiKey);
-    
-    res.json({ success: true, message: 'API key stored securely' });
-  } catch (error) {
-    console.error('Error storing API key:', error.message);
-    res.status(500).json({ error: 'Failed to store API key' });
-  }
-});
-
-// Delete API key endpoint
-app.delete('/api/delete-api-key/:userId', strictLimiter, (req, res) => {
-  try {
-    const { userId } = req.params;
-    
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
-    }
-    
-    const deleted = apiKeyManager.deleteApiKey(userId);
-    
-    if (deleted) {
-      res.json({ success: true, message: 'API key deleted successfully' });
-    } else {
-      res.status(404).json({ error: 'API key not found' });
-    }
-  } catch (error) {
-    console.error('Error deleting API key:', error.message);
-    res.status(500).json({ error: 'Failed to delete API key' });
-  }
-});
+// API key storage endpoints removed - using session-based approach instead
 
 // Save account structure endpoint
 app.post('/api/save-structure', (req, res) => {
@@ -176,21 +115,30 @@ app.post('/api/save-structure', (req, res) => {
   }
 });
 
-// Start download endpoint (secure version)
+// Start download endpoint (session-based version)
 app.post('/api/download', async (req, res) => {
   try {
-    const { userId, targetMonths, selectedEntities, accountStructure, reportTypes, outputDir } = req.body;
+    const { encryptedApiKey, userId, targetMonths, selectedEntities, accountStructure, reportTypes, outputDir } = req.body;
     
     if (!userId) {
       return res.status(400).json({ error: 'User ID is required' });
     }
     
-    // Retrieve API key securely from storage
+    if (!encryptedApiKey) {
+      return res.status(400).json({ error: 'API key is required' });
+    }
+    
+    // Decrypt the API key from request
     let apiKey;
     try {
-      apiKey = apiKeyManager.getApiKey(userId);
+      apiKey = decryptApiKey(encryptedApiKey, userId);
     } catch (error) {
-      return res.status(400).json({ error: 'API key not found. Please store your API key first.' });
+      return res.status(400).json({ error: 'Failed to decrypt API key' });
+    }
+    
+    // Validate API key format (Adyen API keys are typically 30+ characters)
+    if (!apiKey || apiKey.length < 30) {
+      return res.status(400).json({ error: 'Invalid API key format' });
     }
     
     console.log('=== SECURE SERVER DOWNLOAD START ===');
