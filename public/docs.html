@@ -170,6 +170,41 @@
             color: #64748b;
             font-size: 0.875rem;
         }
+        
+        .btn-primary, .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 0.875rem;
+        }
+        
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #4f46e5;
+            border: 2px solid #4f46e5;
+        }
+        
+        .btn-secondary:hover {
+            background: #f3f4f6;
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
@@ -239,7 +274,8 @@
                 </div>
 
                 <h3>Download Sample File</h3>
-                <button onclick="downloadSampleJSON()" class="btn-primary">
+                <p>Click the button below to download a ready-to-use sample JSON file. You can modify it with your actual merchant account codes.</p>
+                <button onclick="downloadSampleJSON()" class="btn-primary" style="margin-bottom: 1rem;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                         <polyline points="7 10 12 15 17 10"/>
@@ -247,6 +283,16 @@
                     </svg>
                     Download Sample JSON File
                 </button>
+                <button onclick="copySampleJSON()" class="btn-secondary" style="margin-left: 0.5rem; margin-bottom: 1rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    Copy to Clipboard
+                </button>
+                <div id="copy-notification" style="display: none; color: #10b981; margin-top: 0.5rem; font-weight: 500;">
+                    ✓ Sample JSON copied to clipboard!
+                </div>
                 
                 <h3>Basic Structure</h3>
                 <div class="json-example">
@@ -264,28 +310,34 @@
                 </div>
 
                 <h3>Complete Example</h3>
+                <p>This example shows how to organize merchant accounts by region and channel:</p>
                 <div class="json-example">
 {
-  "Europe - Retail": [
-    "POPMART-DE-BerlinStore",
-    "POPMART-DE-MunichStore",
-    "POPMART-FR-ParisStore"
+  "North America - Retail Stores": [
+    "COMPANY-US-NewYorkFifthAve",
+    "COMPANY-US-LABeverlyCenter",
+    "COMPANY-CA-TorontoPremium"
   ],
-  "Europe - Online": [
-    "POPMART-EU-ECOM",
-    "POPMART-EU-AMAZON"
+  "North America - E-commerce": [
+    "COMPANY-US-ECOM",
+    "COMPANY-CA-ECOM",
+    "COMPANY-US-AMAZON"
   ],
-  "Asia - Physical Stores": [
-    "POPMART-SG-Takashimaya",
-    "POPMART-SG-IONOrchard",
-    "POPMART-MY-KLCC"
+  "Europe - Physical Stores": [
+    "COMPANY-UK-LondonOxfordSt",
+    "COMPANY-FR-ParisChamps",
+    "COMPANY-DE-BerlinKurfurstendamm"
   ],
-  "Asia - E-commerce": [
-    "POPMART-SG-ECOM",
-    "POPMART-MY-ECOM",
-    "POPMART-HK-ECOM"
+  "Asia Pacific - Retail": [
+    "COMPANY-SG-OrchardRoad",
+    "COMPANY-HK-CentralIFC",
+    "COMPANY-JP-TokyoGinza"
   ]
 }
+                </div>
+                
+                <div class="tip">
+                    <strong>Pro Tip:</strong> The downloadable sample file contains a more comprehensive example with 8 regional groups and 40+ merchant accounts across different channels and geographies.
                 </div>
 
                 <h3>Important Rules</h3>
@@ -487,43 +539,69 @@ settlement_detail/
             });
         });
 
-        // Download sample JSON function
-        function downloadSampleJSON() {
-            const sampleData = {
-                "Europe - Retail": [
-                    "MERCHANT-DE-BerlinStore",
-                    "MERCHANT-DE-MunichStore",
-                    "MERCHANT-FR-ParisStore",
-                    "MERCHANT-UK-LondonStore"
+        // Sample JSON data
+        function getSampleData() {
+            return {
+                "North America - Retail Stores": [
+                    "COMPANY-US-NewYorkFifthAve",
+                    "COMPANY-US-LABeverlyCenter",
+                    "COMPANY-US-ChicagoMagnificentMile",
+                    "COMPANY-CA-TorontoPremium",
+                    "COMPANY-CA-VancouverMetrotown"
+                ],
+                "North America - E-commerce": [
+                    "COMPANY-US-ECOM",
+                    "COMPANY-CA-ECOM",
+                    "COMPANY-US-AMAZON",
+                    "COMPANY-US-WALMART"
+                ],
+                "Europe - Physical Stores": [
+                    "COMPANY-UK-LondonOxfordSt",
+                    "COMPANY-FR-ParisChamps",
+                    "COMPANY-DE-BerlinKurfurstendamm",
+                    "COMPANY-DE-MunichMarienplatz",
+                    "COMPANY-IT-MilanGalleria",
+                    "COMPANY-ES-MadridGranVia"
                 ],
                 "Europe - Online": [
-                    "MERCHANT-EU-ECOM",
-                    "MERCHANT-EU-AMAZON",
-                    "MERCHANT-UK-ECOM"
+                    "COMPANY-EU-ECOM",
+                    "COMPANY-UK-ECOM",
+                    "COMPANY-DE-ECOM",
+                    "COMPANY-FR-ECOM"
                 ],
-                "Asia - Physical Stores": [
-                    "MERCHANT-SG-Takashimaya",
-                    "MERCHANT-SG-IONOrchard",
-                    "MERCHANT-MY-KLCC",
-                    "MERCHANT-HK-CentralStore"
+                "Asia Pacific - Retail": [
+                    "COMPANY-SG-OrchardRoad",
+                    "COMPANY-SG-MarinaBay",
+                    "COMPANY-HK-CentralIFC",
+                    "COMPANY-HK-TST",
+                    "COMPANY-JP-TokyoGinza",
+                    "COMPANY-JP-OsakaShinsaibashi",
+                    "COMPANY-AU-SydneyPittSt",
+                    "COMPANY-AU-MelbourneBourke"
                 ],
-                "Asia - E-commerce": [
-                    "MERCHANT-SG-ECOM",
-                    "MERCHANT-MY-ECOM",
-                    "MERCHANT-HK-ECOM",
-                    "MERCHANT-JP-ECOM"
+                "Asia Pacific - E-commerce": [
+                    "COMPANY-SG-ECOM",
+                    "COMPANY-HK-ECOM",
+                    "COMPANY-JP-ECOM",
+                    "COMPANY-AU-ECOM",
+                    "COMPANY-MY-ECOM"
                 ],
-                "Americas - Retail": [
-                    "MERCHANT-US-NewYorkStore",
-                    "MERCHANT-US-LAStore",
-                    "MERCHANT-CA-TorontoStore"
+                "Middle East - Stores": [
+                    "COMPANY-AE-DubaiMall",
+                    "COMPANY-AE-AbuDhabiMall",
+                    "COMPANY-SA-RiyadhKingdom"
                 ],
-                "Americas - Online": [
-                    "MERCHANT-US-ECOM",
-                    "MERCHANT-CA-ECOM",
-                    "MERCHANT-BR-ECOM"
+                "Latin America - Online": [
+                    "COMPANY-BR-ECOM",
+                    "COMPANY-MX-ECOM",
+                    "COMPANY-AR-ECOM"
                 ]
             };
+        }
+
+        // Download sample JSON function
+        function downloadSampleJSON() {
+            const sampleData = getSampleData();
 
             // Create JSON string with proper formatting
             const jsonString = JSON.stringify(sampleData, null, 2);
@@ -540,6 +618,26 @@ settlement_detail/
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
+        }
+
+        // Copy sample JSON to clipboard
+        function copySampleJSON() {
+            const sampleData = getSampleData();
+            const jsonString = JSON.stringify(sampleData, null, 2);
+            
+            navigator.clipboard.writeText(jsonString).then(() => {
+                // Show notification
+                const notification = document.getElementById('copy-notification');
+                notification.style.display = 'block';
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard. Please try the download button instead.');
+            });
         }
     </script>
 </body>
