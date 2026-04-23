@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adyen Report Downloader - Web App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="adyen-theme.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234F46E5'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/><line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/><polyline points='10 9 9 9 8 9'/></svg>">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="adyen-container">
+                <div class="header-title">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    <h1>Adyen Report Downloader</h1>
+                    <span class="web-badge">Web App</span>
+                </div>
+                <div class="header-actions">
+                    <a href="docs.html" class="btn-secondary btn-small">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                        Documentation
+                    </a>
+                </div>
+                <p class="header-subtitle">Download Adyen reports across all your merchant accounts</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Configuration Section -->
+            <div class="adyen-container">
+                <section class="config-section">
+                <div class="config-header">
+                    <h2>Configuration</h2>
+                    <p>Set up your download parameters</p>
+                </div>
+                
+                <div class="config-form">
+                    <!-- API Key -->
+                    <div class="config-field">
+                        <label for="apiKey">API Key</label>
+                        <div class="api-key-input">
+                            <input type="password" id="apiKey" placeholder="Enter your Adyen Report User API key">
+                            <button type="button" id="toggleApiKey" class="toggle-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="apiKeyStatus" class="api-key-status" style="display: none;">
+                            <span class="status-indicator"></span>
+                            <span class="status-text"></span>
+                        </div>
+                    </div>
+
+                    <!-- Target Period -->
+                    <div class="config-field">
+                        <label>Target Period</label>
+                        <div class="period-selector">
+                            <div class="month-inputs">
+                                <div class="month-input">
+                                    <span>From</span>
+                                    <input type="month" id="startMonth" required>
+                                </div>
+                                <div class="month-input">
+                                    <span>To</span>
+                                    <input type="month" id="endMonth" required>
+                                </div>
+                            </div>
+                            <div class="period-summary" id="monthSelectionSummary">
+                                <span class="summary-text">Select months to download</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Report Types -->
+                    <div class="config-field">
+                        <label>Report Types</label>
+                        <div class="report-types">
+                            <label class="report-type">
+                                <input type="checkbox" id="monthly_finance" checked>
+                                <span>Monthly Finance</span>
+                            </label>
+                            <label class="report-type">
+                                <input type="checkbox" id="invoice">
+                                <span>Invoice Overview</span>
+                            </label>
+                            <label class="report-type">
+                                <input type="checkbox" id="daily_payment_accounting">
+                                <span>Daily Payment Accounting</span>
+                            </label>
+                            <label class="report-type">
+                                <input type="checkbox" id="settlement_detail">
+                                <span>Settlement Detail</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            </div>
+
+            <!-- Account Structure Section -->
+            <div class="adyen-container">
+                <section class="account-section">
+                <div class="section-header">
+                    <h2>Account Structure</h2>
+                    <div class="section-actions">
+                        <button type="button" id="importStructure" class="btn-secondary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            Import JSON
+                        </button>
+                        <button type="button" id="saveStructure" class="btn-secondary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                <polyline points="17 21 17 13 7 13 7 21"/>
+                                <polyline points="7 3 7 8 15 8"/>
+                            </svg>
+                            Save JSON
+                        </button>
+                        <button type="button" id="clearStructure" class="btn-danger">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                            Clear All
+                        </button>
+                        <button type="button" id="addEntity" class="btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Add Group
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Entity Selection Controls -->
+                <div class="entity-controls">
+                    <button type="button" id="selectAllEntities" class="btn-small">Select All</button>
+                    <button type="button" id="deselectAllEntities" class="btn-small">Deselect All</button>
+                    <span class="entity-count">0 groups selected</span>
+                </div>
+
+                <!-- Account Structure Container -->
+                <div id="accountStructureContainer" class="account-container">
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                        <p>No account structure loaded</p>
+                        <p>Import a JSON file or add groups manually to get started</p>
+                    </div>
+                </div>
+            </section>
+            </div>
+
+            <!-- Download Section -->
+            <div class="adyen-container">
+                <section class="download-section">
+                <div class="section-header">
+                    <h2>Download</h2>
+                </div>
+                
+                <div class="download-controls">
+                    <button type="button" id="startDownload" class="btn-primary btn-large">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Start Download
+                    </button>
+                    <button type="button" id="cancelDownload" class="btn-danger btn-large" style="display: none;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="9" y1="9" x2="15" y2="15"/>
+                            <line x1="15" y1="9" x2="9" y2="15"/>
+                        </svg>
+                        Cancel Download
+                    </button>
+                </div>
+
+                <!-- Progress Section -->
+                <div id="progressSection" class="progress-section" style="display: none;">
+                    <div class="progress-header">
+                        <h3>Download Progress</h3>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div id="progressBar" class="progress-bar"></div>
+                    </div>
+                    <div id="progressText" class="progress-text">Initializing...</div>
+                    <div id="logContainer" class="log-container"></div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="resultSummary" class="result-summary" style="display: none;">
+                    <h3>Download Complete</h3>
+                    <div id="resultDetails"></div>
+                </div>
+            </section>
+            </div>
+        </main>
+
+    <!-- Modal Dialog -->
+    <div id="modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Group</h3>
+                <button type="button" id="modalClose" class="btn-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="groupName">Group Name</label>
+                    <input type="text" id="groupName" placeholder="Enter group name">
+                </div>
+                <div class="form-group">
+                    <label for="merchantAccounts">Merchant Accounts (one per line)</label>
+                    <textarea id="merchantAccounts" rows="5" placeholder="MerchantAccount1&#10;MerchantAccount2&#10;MerchantAccount3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modalCancel" class="btn-secondary">Cancel</button>
+                <button type="button" id="modalAdd" class="btn-primary">Add Group</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="fileInput" accept=".json" style="display: none;">
+
+    <script src="app.js"></script>
+</body>
+</html>

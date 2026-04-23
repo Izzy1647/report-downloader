@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Adyen Report Downloader</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234F46E5'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/><line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/><polyline points='10 9 9 9 8 9'/></svg>">
+    <style>
+        .docs-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .docs-nav {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .docs-nav h2 {
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            color: #4f46e5;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #f3f4f6;
+        }
+        
+        .docs-section {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .docs-section h2 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .docs-section h3 {
+            color: #374151;
+            margin: 1.5rem 0 1rem 0;
+        }
+        
+        .code-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .json-example {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .step-list li {
+            counter-increment: step-counter;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-left: 3rem;
+        }
+        
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #4f46e5;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #92400e;
+        }
+        
+        .tip {
+            background: #ecfdf5;
+            border: 1px solid #10b981;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #065f46;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4f46e5;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .report-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .report-type-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        
+        .report-type-card h4 {
+            color: #4f46e5;
+            margin-bottom: 0.5rem;
+        }
+        
+        .report-type-card p {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-title">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                <h1>Documentation</h1>
+            </div>
+            <p class="header-subtitle">Complete guide for using the Adyen Report Downloader</p>
+        </header>
+
+        <div class="docs-container">
+            <!-- Navigation -->
+            <div class="docs-nav">
+                <h2>Quick Navigation</h2>
+                <div class="nav-links">
+                    <a href="#getting-started" class="nav-link">Getting Started</a>
+                    <a href="#json-structure" class="nav-link">JSON Structure</a>
+                    <a href="#step-by-step" class="nav-link">Step-by-Step Guide</a>
+                    <a href="#api-key" class="nav-link">API Key Setup</a>
+                    <a href="#report-types" class="nav-link">Report Types</a>
+                    <a href="#troubleshooting" class="nav-link">Troubleshooting</a>
+                </div>
+            </div>
+
+            <!-- Back to App -->
+            <a href="index.html" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5"/>
+                    <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Back to App
+            </a>
+
+            <!-- Getting Started -->
+            <section id="getting-started" class="docs-section">
+                <h2>Getting Started</h2>
+                <p>The Adyen Report Downloader Web App allows you to bulk-download reports from multiple merchant accounts efficiently. Here's what you need to get started:</p>
+                
+                <h3>Prerequisites</h3>
+                <ul>
+                    <li><strong>Adyen Report User API Key</strong>: You need an API key with Report User permissions</li>
+                    <li><strong>Account Structure JSON File</strong>: A file organizing your merchant accounts into groups</li>
+                    <li><strong>Modern Web Browser</strong>: Chrome, Firefox, Safari, or Edge</li>
+                </ul>
+
+                <div class="tip">
+                    <strong>Tip:</strong> You don't need to install anything! This is a web-based application that runs entirely in your browser.
+                </div>
+            </section>
+
+            <!-- JSON Structure -->
+            <section id="json-structure" class="docs-section">
+                <h2>JSON File Structure</h2>
+                <p>Your account structure file organizes merchant accounts into logical groups. This makes it easy to download reports for specific business units, regions, or account types.</p>
+                
+                <div class="tip">
+                    <strong>Quick Start:</strong> You can download a sample JSON file below and modify it with your actual merchant accounts.
+                </div>
+
+                <h3>Download Sample File</h3>
+                <button onclick="downloadSampleJSON()" class="btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Sample JSON File
+                </button>
+                
+                <h3>Basic Structure</h3>
+                <div class="json-example">
+{
+  "Group Name 1": [
+    "MerchantAccount1",
+    "MerchantAccount2",
+    "MerchantAccount3"
+  ],
+  "Group Name 2": [
+    "MerchantAccount4",
+    "MerchantAccount5"
+  ]
+}
+                </div>
+
+                <h3>Complete Example</h3>
+                <div class="json-example">
+{
+  "Europe - Retail": [
+    "POPMART-DE-BerlinStore",
+    "POPMART-DE-MunichStore",
+    "POPMART-FR-ParisStore"
+  ],
+  "Europe - Online": [
+    "POPMART-EU-ECOM",
+    "POPMART-EU-AMAZON"
+  ],
+  "Asia - Physical Stores": [
+    "POPMART-SG-Takashimaya",
+    "POPMART-SG-IONOrchard",
+    "POPMART-MY-KLCC"
+  ],
+  "Asia - E-commerce": [
+    "POPMART-SG-ECOM",
+    "POPMART-MY-ECOM",
+    "POPMART-HK-ECOM"
+  ]
+}
+                </div>
+
+                <h3>Important Rules</h3>
+                <ul>
+                    <li><strong>Group Names</strong>: Use descriptive names that help you organize accounts (e.g., regions, business units)</li>
+                    <li><strong>Merchant Accounts</strong>: Use exact Adyen merchant account codes</li>
+                    <li><strong>Format</strong>: Must be valid JSON with proper quotes and commas</li>
+                    <li><strong>Empty Groups</strong>: Groups can have one or more merchant accounts</li>
+                </ul>
+
+                <div class="warning">
+                    <strong>Important:</strong> Merchant account names must match exactly with your Adyen account configuration. Check your Adyen Customer Area for the correct merchant account codes.
+                </div>
+            </section>
+
+            <!-- Step-by-Step Guide -->
+            <section id="step-by-step" class="docs-section">
+                <h2>Step-by-Step Guide</h2>
+                
+                <ol class="step-list">
+                    <li>
+                        <h3>Prepare Your API Key</h3>
+                        <p>Get your Adyen Report User API key from the Customer Area. This key should have permissions to access reports for all merchant accounts you want to download from.</p>
+                    </li>
+                    
+                    <li>
+                        <h3>Create Account Structure File</h3>
+                        <p>Create a JSON file organizing your merchant accounts into groups. Use the structure shown in the JSON Structure section above.</p>
+                    </li>
+                    
+                    <li>
+                        <h3>Open the Web App</h3>
+                        <p>Navigate to the Adyen Report Downloader web app in your browser.</p>
+                    </li>
+                    
+                    <li>
+                        <h3>Enter Your API Key</h3>
+                        <p>In the Configuration section, enter your Adyen Report User API key. The key will be hidden for security.</p>
+                    </li>
+                    
+                    <li>
+                        <h3>Import Account Structure</h3>
+                        <p>Click the "Import JSON" button and select your account structure file. The app will validate the file and display your groups.</p>
+                    </li>
+                    
+                    <li>
+                        <h3>Select Target Month</h3>
+                        <p>Choose the month for which you want to download reports. The app will filter reports to only include files from this month.</p>
+                    </li>
+                    
+                    <li>
+                        <h3>Choose Report Types</h3>
+                        <p>Select which types of reports you want to download. Available types include Monthly Finance, Invoice Overview, Daily Payment Accounting, and Settlement Detail.</p>
+                    </li>
+                    
+                    <li>
+                        <h3>Select Groups</h3>
+                        <p>Check the boxes next to the groups you want to include in this download. You can use "Select All" or "Deselect All" for convenience.</p>
+                    </li>
+                    
+                    <li>
+                        <h3>Start Download</h3>
+                        <p>Click the "Start Download" button. The app will show real-time progress as it downloads reports.</p>
+                    </li>
+                    
+                    <li>
+                        <h3>Download ZIP File</h3>
+                        <p>Once the download is complete, click "Download ZIP File" to get all reports in a single ZIP file with organized folder structure.</p>
+                    </li>
+                </ol>
+            </section>
+
+            <!-- API Key Setup -->
+            <section id="api-key" class="docs-section">
+                <h2>API Key Setup</h2>
+                
+                <h3>Getting Your API Key</h3>
+                <ol>
+                    <li>Log in to your Adyen Customer Area</li>
+                    <li>Navigate to Developers > API credentials</li>
+                    <li>Create a new API key or use an existing one</li>
+                    <li>Ensure the key has "Report User" role</li>
+                    <li>Copy the API key and keep it secure</li>
+                </ol>
+
+                <h3>Required Permissions</h3>
+                <p>Your API key needs the following permissions:</p>
+                <ul>
+                    <li><strong>Report User Role</strong>: Access to reports endpoint</li>
+                    <li><strong>Merchant Account Access</strong>: Permissions for all merchant accounts in your structure</li>
+                    <li><strong>Read Permissions</strong>: Ability to download report files</li>
+                </ul>
+
+                <div class="warning">
+                    <strong>Security Note:</strong> Your API key is processed server-side and never stored. It's only used during the download session and then discarded.
+                </div>
+            </section>
+
+            <!-- Report Types -->
+            <section id="report-types" class="docs-section">
+                <h2>Report Types</h2>
+                <p>The app supports four types of Adyen reports. Each report type is stored in its own folder within the ZIP file.</p>
+                
+                <div class="report-types-grid">
+                    <div class="report-type-card">
+                        <h4>Monthly Finance</h4>
+                        <p>Monthly financial summaries including revenue, fees, and settlements for each merchant account.</p>
+                    </div>
+                    
+                    <div class="report-type-card">
+                        <h4>Invoice Overview</h4>
+                        <p>Invoice documents showing billing information and charges for the period.</p>
+                    </div>
+                    
+                    <div class="report-type-card">
+                        <h4>Daily Payment Accounting</h4>
+                        <p>Daily transaction details including payments, refunds, and chargebacks.</p>
+                    </div>
+                    
+                    <div class="report-type-card">
+                        <h4>Settlement Detail</h4>
+                        <p>Detailed settlement information showing how funds are distributed to bank accounts.</p>
+                    </div>
+                </div>
+
+                <h3>Folder Structure in ZIP</h3>
+                <div class="code-block">
+reports_YYYYMM/
+Group Name/
+Merchant Account/
+monthly_finance/
+invoice_overview/
+daily_payment_accounting/
+settlement_detail/
+                </div>
+            </section>
+
+            <!-- Troubleshooting -->
+            <section id="troubleshooting" class="docs-section">
+                <h2>Troubleshooting</h2>
+                
+                <h3>Common Issues</h3>
+                
+                <h4>Download Fails with "No Files Found"</h4>
+                <ul>
+                    <li>Check if the selected month has available reports</li>
+                    <li>Verify merchant account codes are correct</li>
+                    <li>Ensure API key has proper permissions</li>
+                    <li>Try different report types</li>
+                </ul>
+
+                <h4>API Key Authentication Error</h4>
+                <ul>
+                    <li>Verify API key is correct and active</li>
+                    <li>Check if key has Report User role</li>
+                    <li>Ensure key has access to selected merchant accounts</li>
+                </ul>
+
+                <h4>JSON Import Fails</h4>
+                <ul>
+                    <li>Validate JSON syntax using online validator</li>
+                    <li>Ensure proper quotes around all strings</li>
+                    <li>Check for trailing commas</li>
+                    <li>Verify file is saved with .json extension</li>
+                </ul>
+
+                <h4>Progress Stuck or Slow</h4>
+                <ul>
+                    <li>Large downloads may take time</li>
+                    <li>Check network connection stability</li>
+                    <li>Try downloading smaller groups first</li>
+                    <li>Monitor browser console for errors</li>
+                </ul>
+
+                <h3>Getting Help</h3>
+                <p>If you continue to experience issues:</p>
+                <ul>
+                    <li>Check the browser console for error messages</li>
+                    <li>Verify all input parameters are correct</li>
+                    <li>Test with a small group first</li>
+                    <li>Contact your Adyen support team for API-related issues</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Download sample JSON function
+        function downloadSampleJSON() {
+            const sampleData = {
+                "Europe - Retail": [
+                    "MERCHANT-DE-BerlinStore",
+                    "MERCHANT-DE-MunichStore",
+                    "MERCHANT-FR-ParisStore",
+                    "MERCHANT-UK-LondonStore"
+                ],
+                "Europe - Online": [
+                    "MERCHANT-EU-ECOM",
+                    "MERCHANT-EU-AMAZON",
+                    "MERCHANT-UK-ECOM"
+                ],
+                "Asia - Physical Stores": [
+                    "MERCHANT-SG-Takashimaya",
+                    "MERCHANT-SG-IONOrchard",
+                    "MERCHANT-MY-KLCC",
+                    "MERCHANT-HK-CentralStore"
+                ],
+                "Asia - E-commerce": [
+                    "MERCHANT-SG-ECOM",
+                    "MERCHANT-MY-ECOM",
+                    "MERCHANT-HK-ECOM",
+                    "MERCHANT-JP-ECOM"
+                ],
+                "Americas - Retail": [
+                    "MERCHANT-US-NewYorkStore",
+                    "MERCHANT-US-LAStore",
+                    "MERCHANT-CA-TorontoStore"
+                ],
+                "Americas - Online": [
+                    "MERCHANT-US-ECOM",
+                    "MERCHANT-CA-ECOM",
+                    "MERCHANT-BR-ECOM"
+                ]
+            };
+
+            // Create JSON string with proper formatting
+            const jsonString = JSON.stringify(sampleData, null, 2);
+            
+            // Create blob
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sample_account_structure.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

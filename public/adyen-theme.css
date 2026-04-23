@@ -1,0 +1,524 @@
+/* Adyen Design System Theme */
+/* Based on Adyen's brand guidelines and design patterns */
+
+:root {
+  /* Light-Based Adyen Color Palette */
+  --adyen-primary: #0077B6;
+  --adyen-primary-dark: #005A8B;
+  --adyen-primary-light: #E3F2FD;
+  --adyen-primary-ultra-light: #F7FBFF;
+  
+  --adyen-secondary: #FF6B35;
+  --adyen-secondary-dark: #E55A2B;
+  --adyen-secondary-light: #FFF5F0;
+  
+  --adyen-black: #1D1D1D;
+  --adyen-dark-gray: #525252;
+  --adyen-medium-gray: #8B8B8B;
+  --adyen-light-gray: #D4D4D4;
+  --adyen-ultra-light-gray: #FAFAFA;
+  --adyen-white: #FFFFFF;
+  
+  --adyen-success: #10B981;
+  --adyen-success-light: #F0FDF4;
+  --adyen-warning: #F59E0B;
+  --adyen-warning-light: #FFFBEB;
+  --adyen-error: #EF4444;
+  --adyen-error-light: #FEF2F2;
+  --adyen-info: #3B82F6;
+  --adyen-info-light: #EFF6FF;
+  
+  /* Typography */
+  --adyen-font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --adyen-font-weight-light: 300;
+  --adyen-font-weight-regular: 400;
+  --adyen-font-weight-medium: 500;
+  --adyen-font-weight-semibold: 600;
+  --adyen-font-weight-bold: 700;
+  
+  --adyen-text-xs: 0.75rem;
+  --adyen-text-sm: 0.875rem;
+  --adyen-text-base: 1rem;
+  --adyen-text-lg: 1.125rem;
+  --adyen-text-xl: 1.25rem;
+  --adyen-text-2xl: 1.5rem;
+  --adyen-text-3xl: 1.875rem;
+  
+  /* Spacing (8px grid system) */
+  --adyen-space-1: 0.25rem;  /* 4px */
+  --adyen-space-2: 0.5rem;   /* 8px */
+  --adyen-space-3: 0.75rem;  /* 12px */
+  --adyen-space-4: 1rem;     /* 16px */
+  --adyen-space-5: 1.25rem;  /* 20px */
+  --adyen-space-6: 1.5rem;   /* 24px */
+  --adyen-space-8: 2rem;     /* 32px */
+  --adyen-space-10: 2.5rem;  /* 40px */
+  --adyen-space-12: 3rem;    /* 48px */
+  
+  /* Border Radius */
+  --adyen-radius-sm: 0.25rem;  /* 4px */
+  --adyen-radius-md: 0.5rem;   /* 8px */
+  --adyen-radius-lg: 0.75rem;  /* 12px */
+  --adyen-radius-xl: 1rem;     /* 16px */
+  
+  /* Shadows */
+  --adyen-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --adyen-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --adyen-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --adyen-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Transitions */
+  --adyen-transition-fast: 150ms ease-in-out;
+  --adyen-transition-normal: 200ms ease-in-out;
+  --adyen-transition-slow: 300ms ease-in-out;
+}
+
+/* Base Light Theme Styles */
+body {
+  font-family: var(--adyen-font-family);
+  font-weight: var(--adyen-font-weight-regular);
+  color: var(--adyen-black);
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Container for consistent width and alignment */
+.adyen-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--adyen-space-6);
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .adyen-container {
+    padding: 0 var(--adyen-space-8);
+  }
+}
+
+@media (min-width: 1024px) {
+  .adyen-container {
+    padding: 0 var(--adyen-space-12);
+  }
+}
+
+/* Light Theme Header */
+.adyen-header {
+  background: var(--adyen-white);
+  border-bottom: 1px solid rgba(212, 212, 212, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: var(--adyen-space-6) 0;
+  backdrop-filter: blur(10px);
+}
+
+.adyen-logo {
+  font-weight: var(--adyen-font-weight-bold);
+  color: var(--adyen-primary);
+  font-size: var(--adyen-text-2xl);
+  text-decoration: none;
+}
+
+.adyen-logo:hover {
+  color: var(--adyen-primary-dark);
+}
+
+/* Adyen Navigation */
+.adyen-nav {
+  display: flex;
+  gap: var(--adyen-space-6);
+  align-items: center;
+}
+
+.adyen-nav-link {
+  color: var(--adyen-dark-gray);
+  text-decoration: none;
+  font-weight: var(--adyen-font-weight-medium);
+  font-size: var(--adyen-text-sm);
+  padding: var(--adyen-space-2) var(--adyen-space-4);
+  border-radius: var(--adyen-radius-sm);
+  transition: all var(--adyen-transition-fast);
+}
+
+.adyen-nav-link:hover {
+  color: var(--adyen-primary);
+  background-color: var(--adyen-primary-ultra-light);
+}
+
+.adyen-nav-link.active {
+  color: var(--adyen-primary);
+  background-color: var(--adyen-primary-light);
+}
+
+/* Adyen Buttons */
+.adyen-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--adyen-space-2);
+  padding: var(--adyen-space-3) var(--adyen-space-5);
+  border: 1px solid transparent;
+  border-radius: var(--adyen-radius-md);
+  font-family: var(--adyen-font-family);
+  font-weight: var(--adyen-font-weight-medium);
+  font-size: var(--adyen-text-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--adyen-transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.adyen-btn:focus {
+  outline: 2px solid var(--adyen-primary);
+  outline-offset: 2px;
+}
+
+.adyen-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Primary Button */
+.adyen-btn-primary {
+  background-color: var(--adyen-primary);
+  color: var(--adyen-white);
+  border-color: var(--adyen-primary);
+}
+
+.adyen-btn-primary:hover:not(:disabled) {
+  background-color: var(--adyen-primary-dark);
+  border-color: var(--adyen-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--adyen-shadow-md);
+}
+
+.adyen-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--adyen-shadow-sm);
+}
+
+/* Secondary Button */
+.adyen-btn-secondary {
+  background-color: var(--adyen-white);
+  color: var(--adyen-primary);
+  border-color: var(--adyen-primary);
+}
+
+.adyen-btn-secondary:hover:not(:disabled) {
+  background-color: var(--adyen-primary-light);
+  transform: translateY(-1px);
+  box-shadow: var(--adyen-shadow-md);
+}
+
+/* Outline Button */
+.adyen-btn-outline {
+  background-color: transparent;
+  color: var(--adyen-primary);
+  border-color: var(--adyen-primary);
+}
+
+.adyen-btn-outline:hover:not(:disabled) {
+  background-color: var(--adyen-primary-light);
+  transform: translateY(-1px);
+  box-shadow: var(--adyen-shadow-md);
+}
+
+/* Ghost Button */
+.adyen-btn-ghost {
+  background-color: transparent;
+  color: var(--adyen-dark-gray);
+  border-color: transparent;
+}
+
+.adyen-btn-ghost:hover:not(:disabled) {
+  background-color: var(--adyen-ultra-light-gray);
+  color: var(--adyen-primary);
+}
+
+/* Danger Button */
+.adyen-btn-danger {
+  background-color: var(--adyen-error);
+  color: var(--adyen-white);
+  border-color: var(--adyen-error);
+}
+
+.adyen-btn-danger:hover:not(:disabled) {
+  background-color: #D32F2F;
+  border-color: #D32F2F;
+  transform: translateY(-1px);
+  box-shadow: var(--adyen-shadow-md);
+}
+
+/* Adyen Form Elements */
+.adyen-form-group {
+  margin-bottom: var(--adyen-space-5);
+}
+
+.adyen-label {
+  display: block;
+  font-weight: var(--adyen-font-weight-medium);
+  font-size: var(--adyen-text-sm);
+  color: var(--adyen-dark-gray);
+  margin-bottom: var(--adyen-space-2);
+}
+
+.adyen-input,
+.adyen-select,
+.adyen-textarea {
+  width: 100%;
+  padding: var(--adyen-space-3) var(--adyen-space-4);
+  border: 1px solid var(--adyen-light-gray);
+  border-radius: var(--adyen-radius-md);
+  font-family: var(--adyen-font-family);
+  font-size: var(--adyen-text-base);
+  color: var(--adyen-black);
+  background-color: var(--adyen-white);
+  transition: all var(--adyen-transition-fast);
+}
+
+.adyen-input:focus,
+.adyen-select:focus,
+.adyen-textarea:focus {
+  outline: none;
+  border-color: var(--adyen-primary);
+  box-shadow: 0 0 0 3px rgba(0, 137, 207, 0.1);
+}
+
+.adyen-input::placeholder,
+.adyen-textarea::placeholder {
+  color: var(--adyen-medium-gray);
+}
+
+/* Light Theme Cards */
+.adyen-card {
+  background: var(--adyen-white);
+  border: 1px solid rgba(212, 212, 212, 0.2);
+  border-radius: var(--adyen-radius-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: var(--adyen-space-8);
+  transition: all var(--adyen-transition-normal);
+  backdrop-filter: blur(10px);
+}
+
+.adyen-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  border-color: rgba(212, 212, 212, 0.4);
+}
+
+.adyen-card-header {
+  margin-bottom: var(--adyen-space-4);
+  padding-bottom: var(--adyen-space-4);
+  border-bottom: 1px solid var(--adyen-light-gray);
+}
+
+.adyen-card-title {
+  font-weight: var(--adyen-font-weight-semibold);
+  font-size: var(--adyen-text-xl);
+  color: var(--adyen-black);
+  margin: 0 0 var(--adyen-space-2) 0;
+}
+
+.adyen-card-subtitle {
+  font-weight: var(--adyen-font-weight-regular);
+  font-size: var(--adyen-text-sm);
+  color: var(--adyen-medium-gray);
+  margin: 0;
+}
+
+/* Adyen Progress Bar */
+.adyen-progress {
+  width: 100%;
+  height: 8px;
+  background-color: var(--adyen-light-gray);
+  border-radius: var(--adyen-radius-sm);
+  overflow: hidden;
+}
+
+.adyen-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--adyen-primary) 0%, var(--adyen-primary-dark) 100%);
+  border-radius: var(--adyen-radius-sm);
+  transition: width var(--adyen-transition-normal);
+}
+
+/* Adyen Status Indicators */
+.adyen-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--adyen-space-2);
+  padding: var(--adyen-space-1) var(--adyen-space-3);
+  border-radius: var(--adyen-radius-xl);
+  font-size: var(--adyen-text-xs);
+  font-weight: var(--adyen-font-weight-medium);
+  text-transform: uppercase;
+}
+
+.adyen-status-success {
+  background-color: var(--adyen-success-light);
+  color: var(--adyen-success);
+}
+
+.adyen-status-warning {
+  background-color: var(--adyen-warning-light);
+  color: var(--adyen-warning);
+}
+
+.adyen-status-error {
+  background-color: var(--adyen-error-light);
+  color: var(--adyen-error);
+}
+
+.adyen-status-info {
+  background-color: var(--adyen-info-light);
+  color: var(--adyen-info);
+}
+
+/* Light Theme Sections */
+.adyen-section {
+  background: var(--adyen-white);
+  border: 1px solid rgba(212, 212, 212, 0.15);
+  border-radius: var(--adyen-radius-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: var(--adyen-space-10);
+  margin-bottom: var(--adyen-space-8);
+  backdrop-filter: blur(10px);
+}
+
+.adyen-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--adyen-space-6);
+}
+
+.adyen-section-title {
+  font-weight: var(--adyen-font-weight-semibold);
+  font-size: var(--adyen-text-xl);
+  color: var(--adyen-black);
+  margin: 0;
+}
+
+.adyen-section-description {
+  font-weight: var(--adyen-font-weight-regular);
+  font-size: var(--adyen-text-sm);
+  color: var(--adyen-medium-gray);
+  margin: var(--adyen-space-2) 0 0 0;
+}
+
+/* Adyne Checkbox */
+.adyen-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adyen-space-3);
+}
+
+.adyen-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--adyen-space-3);
+  cursor: pointer;
+  padding: var(--adyen-space-3);
+  border-radius: var(--adyen-radius-md);
+  transition: background-color var(--adyen-transition-fast);
+}
+
+.adyen-checkbox-label:hover {
+  background-color: var(--adyen-ultra-light-gray);
+}
+
+.adyen-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--adyen-primary);
+  cursor: pointer;
+}
+
+.adyen-checkbox-text {
+  font-weight: var(--adyen-font-weight-regular);
+  font-size: var(--adyen-text-base);
+  color: var(--adyen-black);
+}
+
+/* Adyen Notifications */
+.adyen-notification {
+  position: fixed;
+  top: var(--adyen-space-4);
+  right: var(--adyen-space-4);
+  padding: var(--adyen-space-4);
+  border-radius: var(--adyen-radius-md);
+  box-shadow: var(--adyen-shadow-lg);
+  z-index: 1000;
+  max-width: 400px;
+  transform: translateX(120%);
+  transition: transform var(--adyen-transition-normal);
+}
+
+.adyen-notification.show {
+  transform: translateX(0);
+}
+
+.adyen-notification-success {
+  background-color: var(--adyen-success);
+  color: var(--adyen-white);
+}
+
+.adyen-notification-error {
+  background-color: var(--adyen-error);
+  color: var(--adyen-white);
+}
+
+.adyen-notification-warning {
+  background-color: var(--adyen-warning);
+  color: var(--adyen-white);
+}
+
+.adyen-notification-info {
+  background-color: var(--adyen-info);
+  color: var(--adyen-white);
+}
+
+/* Adyne Loading Spinner */
+.adyen-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--adyen-light-gray);
+  border-top: 2px solid var(--adyen-primary);
+  border-radius: 50%;
+  animation: adyen-spin 1s linear infinite;
+}
+
+@keyframes adyen-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .adyen-nav {
+    flex-direction: column;
+    gap: var(--adyen-space-4);
+  }
+  
+  .adyen-section {
+    padding: var(--adyen-space-6);
+  }
+  
+  .adyen-btn {
+    padding: var(--adyen-space-4) var(--adyen-space-4);
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .adyen-dark-mode {
+    --adyen-black: #FFFFFF;
+    --adyen-white: #1A1A1A;
+    --adyen-dark-gray: #E0E0E0;
+    --adyen-medium-gray: #A0A0A0;
+    --adyen-light-gray: #4A4A4A;
+    --adyen-ultra-light-gray: #2A2A2A;
+  }
+}

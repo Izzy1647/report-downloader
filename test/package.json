@@ -1,0 +1,49 @@
+{
+  "name": "adyen-report-downloader-tests",
+  "version": "1.0.0",
+  "description": "Test suite for Adyen Report Downloader web application",
+  "main": "scripts/test-runner.js",
+  "scripts": {
+    "test": "node scripts/test-runner.js",
+    "test:api": "cd scripts && ./test-api.sh",
+    "test:comprehensive": "cd scripts && ./comprehensive-tests.sh",
+    "test:automation": "node scripts/test-automation.js",
+    "test:health": "node scripts/test-runner.js health",
+    "test:upload": "node scripts/test-runner.js upload",
+    "test:single": "node scripts/test-runner.js single",
+    "test:multi": "node scripts/test-runner.js multi",
+    "test:all": "node scripts/test-runner.js all",
+    "test:concurrent": "node scripts/test-runner.js concurrent",
+    "clean": "rm -rf reports/*",
+    "setup": "chmod +x scripts/*.sh && mkdir -p reports"
+  },
+  "keywords": [
+    "test",
+    "automation",
+    "api",
+    "e2e",
+    "adyen",
+    "report-downloader"
+  ],
+  "author": "Adyen Report Downloader Team",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "puppeteer": "^10.4.0"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.is.adyen.com/joec/report-downloader-gui.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.is.adyen.com/joec/report-downloader-gui/issues"
+  },
+  "homepage": "https://gitlab.is.adyen.com/joec/report-downloader-gui#readme"
+}

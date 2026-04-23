@@ -1,0 +1,27 @@
+{
+  "scenarios": {
+    "single_month": {
+      "apiKey": "test-key-single",
+      "targetMonths": ["202504"],
+      "selectedEntities": ["Europe - Retail"],
+      "reportTypes": ["monthly_finance"]
+    },
+    "multi_month": {
+      "apiKey": "test-key-multi",
+      "targetMonths": ["202504", "202505", "202506"],
+      "selectedEntities": ["Europe - Retail", "Asia - E-commerce"],
+      "reportTypes": ["monthly_finance", "invoice"]
+    },
+    "all_reports": {
+      "apiKey": "test-key-all",
+      "targetMonths": ["202504"],
+      "selectedEntities": ["Europe - Retail"],
+      "reportTypes": ["monthly_finance", "invoice", "daily_payment_accounting", "settlement_detail"]
+    }
+  },
+  "accountStructure": {
+    "Europe - Retail": ["MERCHANT-DE-BerlinStore", "MERCHANT-DE-MunichStore"],
+    "Asia - E-commerce": ["MERCHANT-SG-ECOM", "MERCHANT-HK-ECOM"],
+    "Americas - Online": ["MERCHANT-US-ECOM", "MERCHANT-CA-ECOM"]
+  }
+}

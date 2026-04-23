@@ -1,0 +1,17 @@
+{
+  "Sample Group 1": [
+    "MerchantAccount1",
+    "MerchantAccount2",
+    "MerchantAccount3"
+  ],
+  "Sample Group 2": [
+    "MerchantAccount4",
+    "MerchantAccount5"
+  ],
+  "Sample Group 3": [
+    "MerchantAccount6",
+    "MerchantAccount7",
+    "MerchantAccount8",
+    "MerchantAccount9"
+  ]
+}
