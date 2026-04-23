@@ -84,19 +84,26 @@ body {
 }
 
 .header-actions {
-    position: absolute;
-    top: var(--adyen-space-6);
-    right: var(--adyen-space-8);
+    margin-top: var(--adyen-space-4);
     display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
+    gap: var(--adyen-space-3);
+    flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+    .header-actions {
+        position: absolute;
+        top: var(--adyen-space-6);
+        right: var(--adyen-space-8);
+        margin-top: 0;
+    }
 }
 
 .header-actions a {
-    color: white;
+    color: var(--adyen-primary);
     text-decoration: none;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: var(--adyen-white);
+    border: 2px solid var(--adyen-primary);
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     font-weight: 500;
@@ -104,16 +111,13 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    box-shadow: var(--adyen-shadow-sm);
 }
 
 .header-actions a:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--adyen-primary-light);
     transform: translateY(-1px);
-}
-
-.header-subtitle {
-    opacity: 0.9;
-    font-size: 1.1rem;
+    box-shadow: var(--adyen-shadow-md);
 }
 
 /* Main Content - Light Theme */
@@ -168,7 +172,7 @@ body {
 .config-form {
     display: flex;
     flex-direction: column;
-    gap: var(--adyen-space-7);
+    gap: var(--adyen-space-8);
 }
 
 .config-field {
@@ -232,36 +236,9 @@ body {
     color: var(--adyen-primary);
 }
 
-/* API Key Status Indicator */
+/* API Key Status Indicator - Hidden */
 .api-key-status {
-    display: flex;
-    align-items: center;
-    gap: var(--adyen-space-2);
-    margin-top: var(--adyen-space-2);
-    padding: var(--adyen-space-2) var(--adyen-space-3);
-    border-radius: var(--adyen-radius-md);
-    font-size: var(--adyen-text-sm);
-}
-
-.api-key-status.stored {
-    background: var(--adyen-success-light);
-    color: var(--adyen-success);
-}
-
-.api-key-status.error {
-    background: var(--adyen-error-light);
-    color: var(--adyen-error);
-}
-
-.status-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: currentColor;
-}
-
-.status-text {
-    font-weight: var(--adyen-font-weight-medium);
+    display: none !important;
 }
 
 /* Period Selector */

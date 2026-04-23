@@ -56,14 +56,20 @@
                         <label for="apiKey">API Key</label>
                         <div class="api-key-input">
                             <input type="password" id="apiKey" placeholder="Enter your Adyen Report User API key">
-                            <button type="button" id="toggleApiKey" class="toggle-btn">
+                            <button type="button" id="toggleApiKey" class="toggle-btn" aria-label="Toggle API key visibility">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                     <circle cx="12" cy="12" r="3"/>
                                 </svg>
                             </button>
+                            <button type="button" id="clearApiKeyBtn" class="toggle-btn" style="display: none;" aria-label="Clear stored API key">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
                         </div>
-                        <div id="apiKeyStatus" class="api-key-status" style="display: none;">
+                        <div id="apiKeyStatus" class="api-key-status">
                             <span class="status-indicator"></span>
                             <span class="status-text"></span>
                         </div>
@@ -121,31 +127,31 @@
                 <div class="section-header">
                     <h2>Account Structure</h2>
                     <div class="section-actions">
-                        <button type="button" id="importStructure" class="btn-secondary">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button type="button" id="importStructure" class="btn-secondary" aria-label="Import account structure from JSON file">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                 <polyline points="17 8 12 3 7 8"/>
                                 <line x1="12" y1="3" x2="12" y2="15"/>
                             </svg>
                             Import JSON
                         </button>
-                        <button type="button" id="saveStructure" class="btn-secondary">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button type="button" id="saveStructure" class="btn-secondary" aria-label="Save current account structure to JSON file">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
                                 <polyline points="17 21 17 13 7 13 7 21"/>
                                 <polyline points="7 3 7 8 15 8"/>
                             </svg>
                             Save JSON
                         </button>
-                        <button type="button" id="clearStructure" class="btn-danger">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button type="button" id="clearStructure" class="btn-danger" aria-label="Clear all account structure groups">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <polyline points="3 6 5 6 21 6"/>
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                             </svg>
                             Clear All
                         </button>
-                        <button type="button" id="addEntity" class="btn-primary">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button type="button" id="addEntity" class="btn-primary" aria-label="Add new account group">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <line x1="12" y1="5" x2="12" y2="19"/>
                                 <line x1="5" y1="12" x2="19" y2="12"/>
                             </svg>
@@ -156,9 +162,9 @@
 
                 <!-- Entity Selection Controls -->
                 <div class="entity-controls">
-                    <button type="button" id="selectAllEntities" class="btn-small">Select All</button>
-                    <button type="button" id="deselectAllEntities" class="btn-small">Deselect All</button>
-                    <span class="entity-count">0 groups selected</span>
+                    <button type="button" id="selectAllEntities" class="btn-small" aria-label="Select all account groups">Select All</button>
+                    <button type="button" id="deselectAllEntities" class="btn-small" aria-label="Deselect all account groups">Deselect All</button>
+                    <span class="entity-count" aria-live="polite">0 groups selected</span>
                 </div>
 
                 <!-- Account Structure Container -->
@@ -186,16 +192,16 @@
                 </div>
                 
                 <div class="download-controls">
-                    <button type="button" id="startDownload" class="btn-primary btn-large">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <button type="button" id="startDownload" class="btn-primary btn-large" aria-label="Start downloading reports">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="7 10 12 15 17 10"/>
                             <line x1="12" y1="15" x2="12" y2="3"/>
                         </svg>
                         Start Download
                     </button>
-                    <button type="button" id="cancelDownload" class="btn-danger btn-large" style="display: none;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <button type="button" id="cancelDownload" class="btn-danger btn-large" style="display: none;" aria-label="Cancel current download">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                             <line x1="9" y1="9" x2="15" y2="15"/>
                             <line x1="15" y1="9" x2="9" y2="15"/>
