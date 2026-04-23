@@ -3,16 +3,37 @@ const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 const multer = require('multer');
+const rateLimit = require('express-rate-limit');
 const { runDownload } = require('./downloadEngine');
 const ApiKeyManager = require('./apiKeyManager');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Rate limiting configuration
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const strictLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 requests per windowMs for sensitive endpoints
+  message: 'Too many attempts, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+
+// Apply rate limiting to all API routes
+app.use('/api/', apiLimiter);
 
 // File upload configuration
 const upload = multer({ 
@@ -83,7 +104,7 @@ function decryptApiKey(encryptedApiKey, userId) {
 }
 
 // Secure API key storage endpoint
-app.post('/api/store-api-key', (req, res) => {
+app.post('/api/store-api-key', strictLimiter, (req, res) => {
   try {
     const { encryptedApiKey, userId } = req.body;
     
@@ -115,7 +136,7 @@ app.post('/api/store-api-key', (req, res) => {
 });
 
 // Delete API key endpoint
-app.delete('/api/delete-api-key/:userId', (req, res) => {
+app.delete('/api/delete-api-key/:userId', strictLimiter, (req, res) => {
   try {
     const { userId } = req.params;
     
@@ -174,12 +195,11 @@ app.post('/api/download', async (req, res) => {
     
     console.log('=== SECURE SERVER DOWNLOAD START ===');
     console.log('Request received:', {
-      userId,
-      targetMonths,
-      selectedEntities,
-      reportTypes,
-      accountStructureKeys: Object.keys(accountStructure || {}),
-      apiKeyRetrieved: true // Don't log the actual key
+      userId: userId.substring(0, 8) + '...',
+      targetMonths: targetMonths?.length || 0,
+      selectedEntitiesCount: selectedEntities?.length || 0,
+      reportTypesCount: reportTypes?.length || 0,
+      accountStructureGroups: Object.keys(accountStructure || {}).length
     });
     
     // Generate download ID

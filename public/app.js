@@ -31,7 +31,6 @@ function initializeUserId() {
     localStorage.setItem('adyen_user_id', userId);
   }
   currentUserId = userId;
-  console.log('User ID initialized:', userId.substring(0, 8) + '...');
 }
 
 function updateApiKeyStatus(stored, message = '') {
